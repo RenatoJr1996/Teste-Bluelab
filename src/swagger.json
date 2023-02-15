@@ -1,0 +1,90 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Teste Bluelab Documentation",
+        "description": "Processo seletivo Bluelab",
+        "version": "1.0.0",
+        "contact": {
+            "email":"renatto.cjunior@gmail.com"
+        }
+
+    },
+    "paths": {
+        "/cliente": {
+            "post":{
+                "tags": ["Create"],
+                "summary": "Create a cliente",
+                "description": "Creating a new Cliente",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nome": {
+                                        "type": "string"
+                                    },
+                                    "sobrenome": {
+                                        "type": "string"
+                                    },
+                                    "telefone": {
+                                        "type": "string"
+                                    },
+                                    "cpf": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                        "nome":"Gabriela",
+                                        "sobrenome":"Junior",
+                                        "telefone":"(14)98122-5756",
+                                        "cpf":"43640521838"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "true": {
+                        "description": "Created"
+                    },
+                    "false": {
+                        "description": "Create Fail"
+                    } 
+
+                }
+            },
+            "GET":{
+                "tags": ["List"],
+                "summary": "List by CPF",
+                "description": "List by CPF",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "cpf": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                        "cpf":"43640521838"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "true": {
+                        "description": ""
+                    },
+                    "false": {
+                        "description": ""
+                    } 
+
+                }
+            }
+        }
+    }
+}
