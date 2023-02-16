@@ -7,11 +7,13 @@ export class ClienteRepository implements IClienteRepository{
 
     private clientes: Cliente[];
 
-    constructor() {
+     constructor() {
         this.clientes = []
     }
 
-    async create({nome, sobrenome, telefone, cpf}: ICreateClienteDTO ):Promise<Cliente>{
+
+
+    async create({ nome, sobrenome, telefone, cpf}: ICreateClienteDTO ):Promise<Cliente>{
         const cliente = new Cliente();
 
         Object.assign(cliente, {
@@ -36,6 +38,12 @@ export class ClienteRepository implements IClienteRepository{
         const cliente = this.clientes.find((cliente) => cliente.cpf === cpf );
         return cliente;
     }
+
+    async delete(id:string): Promise<Cliente[]> {
+       this.clientes = await this.clientes.filter((cliente) => cliente.id != id );
+       return this.clientes;
+    }
+
 
 
 }

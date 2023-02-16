@@ -21,9 +21,11 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "libphonenumber-js": "^1.10.19",
     "node-cpf": "^1.2.4",
+    "socket.io": "^4.6.0",
     "swagger-ui-express": "^4.6.0",
     "telefone": "^1.2.4",
     "ts-node": "^10.9.1"

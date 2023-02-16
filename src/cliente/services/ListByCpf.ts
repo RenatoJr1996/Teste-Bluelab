@@ -9,14 +9,14 @@ interface IRequest {
 export class ListByCpf{
     constructor (private clienteRepository: ClienteRepository) {}
 
-    execute({cpf}:IRequest) {
+    async execute({cpf}:IRequest) {
          
     if (!cpfValidator.validate(cpf)) {
         return{sucess:false, mensagem: "CPF inválido"};
     }
     const CPF = cpfValidator.mask(cpf);
 
-    const clienteExist = this.clienteRepository.findByCpf(CPF);
+    const clienteExist = await this.clienteRepository.findByCpf(CPF);
 
     if (!clienteExist) {
         return {sucess:false, mensagem: "CPF não encontrado"};

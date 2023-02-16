@@ -1,7 +1,7 @@
 
 import cpfValidator from 'node-cpf';
-import { ClienteRepository } from '../../repositories/ClienteRepository';
-import { ClienteRepositoryInMemory } from '../../repositories/inMemory/ClienteRepositoryInMemory';
+import { IClienteRepository } from '../../repositories/IClienteRepository';
+
 
 
 interface IRequest {
@@ -12,7 +12,7 @@ interface IRequest {
 }
 
 export class CreateCliente{
-    constructor (private clienteRepository: ClienteRepository) {}
+    constructor (private clienteRepository: IClienteRepository) {}
 
     async execute({nome, sobrenome, telefone, cpf}:IRequest) {
         
@@ -20,13 +20,22 @@ export class CreateCliente{
             return {sucess:false, mensagem:'CPF inválido'}
         }
 
-        if (await this.clienteRepository.findByCpf(cpf)) {
+        const CPF = cpfValidator.mask(cpf);
+
+        if (await this.clienteRepository.findByCpf(CPF)) {
             return {sucess:false, mensagem:'CPF já Cadastrado'}
         }
 
-        const CPF = cpfValidator.mask(cpf);
+        const isValidPhone = (phone) => {
+            const brazilianPhoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/gi;
+            return brazilianPhoneRegex.test(phone);
+          };
 
-        await this.clienteRepository.create({ nome, sobrenome, telefone, cpf: CPF }); 
+          if(!isValidPhone(telefone)){
+            return {sucess:false, mensagem:'numero de telefone invalido'}
+          } 
+
+         this.clienteRepository.create({ nome, sobrenome, telefone, cpf: CPF }); 
 
         return{sucess: true}
     }

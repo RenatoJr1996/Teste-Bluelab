@@ -11,5 +11,6 @@ export interface ICreateClienteDTO {
 export interface IClienteRepository {
     create({nome, sobrenome, telefone, cpf}:ICreateClienteDTO):Promise<Cliente>;
     findByCpf(cpf:string):Promise<Cliente>;
-    list(): Promise<Cliente[]>
+    list(): Promise<Cliente[]>;
+    delete(id:string):Promise<Cliente[]>
 }

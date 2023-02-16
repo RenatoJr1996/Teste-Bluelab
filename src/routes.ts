@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createClienteController, listByCpfController } from './cliente';
+import { createClienteController, deleteClienteController, listByCpfController, listAllController, updateClienteController} from './cliente';
 
 
 export const routes = Router();
@@ -10,7 +10,19 @@ routes.post("/cliente", (request, response) => {
 });
 
 
-
 routes.get("/cliente", (request, response) => {
     return listByCpfController.handle(request, response);
 });
+
+routes.delete("/cliente", (request, response) => {
+    return deleteClienteController.handle(request, response);
+});
+
+routes.patch("/cliente", (request, response) => {
+    return updateClienteController.handle(request, response);
+});
+
+routes.get("/all", (request, response) => {
+    return listAllController.handle(request, response);
+});
+
