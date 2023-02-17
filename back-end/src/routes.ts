@@ -10,7 +10,7 @@ routes.post("/cliente", (request, response) => {
 });
 
 
-routes.get("/cliente", (request, response) => {
+routes.put("/cliente", (request, response) => {
     return listByCpfController.handle(request, response);
 });
 

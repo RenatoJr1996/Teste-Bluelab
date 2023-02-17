@@ -32,11 +32,11 @@ export class CreateCliente{
           };
 
           if(!isValidPhone(telefone)){
-            return {sucess:false, mensagem:'numero de telefone invalido'}
+            return {sucess:false, mensagem:'Telefone invalido'}
           } 
 
          this.clienteRepository.create({ nome, sobrenome, telefone, cpf: CPF }); 
 
-        return{sucess: true}
+        return{sucess: true, mensagem: "Cliente cadastrado com sucesso"}
     }
 } 

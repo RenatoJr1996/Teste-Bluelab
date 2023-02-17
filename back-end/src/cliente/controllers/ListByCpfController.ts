@@ -8,7 +8,7 @@ export class ListByCpfController {
     constructor(private listByCpf: ListByCpf){}
 
     async handle( request:Request, response:Response){
-        const { cpf } = request.body;
+        const  { cpf }  = request.body;
        
         const res = await this.listByCpf.execute({cpf})
 
