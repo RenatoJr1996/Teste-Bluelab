@@ -5,6 +5,7 @@ import swaggerFile from './swagger.json'
 import http from 'http'
 import cors from 'cors'
 import { Server } from 'socket.io'
+import { measureMemory } from 'vm';
 
 const app = express()
 
@@ -26,10 +27,18 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-    console.log(`Cliente ID: ${socket.id} .`);
+
+    socket.on("joinRoom", ({room, name}) => {
+        socket.join(room);
+        console.log(room);
+    })
+
+    socket.on("sendMessage", (message) => {
+        console.log(message);
+        socket.to(message.room).emit("reSendMessage",message)
+    })
 
     socket.on("disconnect", () => {
-        console.log("User Disconnected", socket.id);
         
     })
 });

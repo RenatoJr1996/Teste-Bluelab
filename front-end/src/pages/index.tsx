@@ -1,9 +1,26 @@
 import Head from 'next/head'
 import { Inter } from '@next/font/google'
+import io from 'socket.io-client'
+import { useState } from 'react';
+import { Chat } from '@/components/Chat';
 
-const inter = Inter({ subsets: ['latin'] })
+
+
+const socket = io("http://localhost:3333");
 
 export default function Home() {
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
+  const [chat, setChat] = useState(false);
+
+
+  const joinRoom = () => {
+    if(name !== '' && room !== ''){
+      socket.emit('joinRoom', {room:room, name: name});
+      setChat(true);
+    }
+  }
+
   return (
     <>
       <Head>
@@ -13,7 +30,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main >
-          <div><h1>Hello World!</h1></div>
+      
+            {chat ? <Chat socket = {socket} name = {name} room = {room} /> :   <div> <h3>Entre no Chat</h3>
+            <input type="text" placeholder='Nome'onChange={({target}) => {setName(target.value)}} />
+            <input type="text" placeholder='Room' onChange={({target}) => {setRoom(target.value)}}/>
+            <button onClick={joinRoom}>Entrar</button> </div>}
+          
       </main>
     </>
   )
