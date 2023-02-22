@@ -21,7 +21,7 @@ routes.patch("/cliente", (request, response) => {
     return updateUserController.handle(request, response);
 });
 
-routes.get("/all", (request, response) => {
+routes.get("/all", AuthenticateUserMiddleware, (request, response) => {
     return listAllController.handle(request, response);
 });
 
