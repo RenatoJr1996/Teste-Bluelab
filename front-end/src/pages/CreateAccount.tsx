@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import { setInterval } from "timers";
 
 
 
@@ -8,6 +7,8 @@ import { setInterval } from "timers";
 export default function CreateAccount() {
 
     const [cpf, setCpf] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [phone, setPhone] = useState('');
@@ -19,17 +20,18 @@ export default function CreateAccount() {
 
     const createCliente = async () => {
         event?.preventDefault();
-        const cliente = await axios({
+        const user = await axios({
             url: "http://localhost:3333/cliente",
             method: "post",
-            data: { nome: name, sobrenome: lastName, telefone: phone, cpf: cpf }
+            data: { nome: name, sobrenome: lastName, telefone: phone, cpf: cpf, email: email, password: password }
         });
 
 
-    setCpfValid(cliente.data.sucess);
-    setServerMessage(cliente.data.mensagem)
+    setCpfValid(user.data.sucess);
+    setServerMessage(user.data.mensagem);
+    setEmail('');
+    
     }
-
 
 
 
@@ -54,6 +56,11 @@ export default function CreateAccount() {
                 }
 
                 <form className="flex flex-col" method="POST" action="#">
+
+                <div className="mb-6 pt-3 rounded bg-gray-200">
+                        <label className="block text-gray-700 text-sm font-bold mb-1 ml-3" htmlFor="Email">Email</label>
+                        <input onChange={({ target }) => { setEmail(target.value) }} type="text" id="Email" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-1" />
+                    </div>
                     <div className="mb-6 pt-3 rounded bg-gray-200">
                         <label className="block text-gray-700 text-sm font-bold mb-1 ml-3" htmlFor="Name">Nome</label>
                         <input onChange={({ target }) => { setName(target.value) }} type="text" id="Name" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-1" />
@@ -69,6 +76,10 @@ export default function CreateAccount() {
                     <div className="mb-6 pt-3 rounded bg-gray-200">
                         <label className="block text-gray-700 text-sm font-bold mb-1 ml-3" htmlFor="Phone">Telefone</label>
                         <input placeholder="(00) 00000-0000" onChange={({ target }) => { setPhone(target.value) }} type="text" id="Phone" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-1" />
+                    </div>
+                    <div className="mb-6 pt-3 rounded bg-gray-200">
+                        <label className="block text-gray-700 text-sm font-bold mb-1 ml-3" htmlFor="Password">Senha</label>
+                        <input placeholder="*******" onChange={({ target }) => { setPassword(target.value) }} type="password" id="Password" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-1" />
                     </div>
                     <div className="flex justify-end">
                         <a href="/" className="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6">Login</a>

@@ -13,6 +13,6 @@ export class DeleteUserController {
 
         const res = await this.userCliente.execute({cpf})
 
-        return response.status(201).json({sucess: res.sucess, mensagem: res.mensagem});
+        return response.status(201).json({sucess: res.sucess, mensagem: res.mensagem, });
     }
 }

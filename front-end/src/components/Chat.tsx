@@ -16,8 +16,7 @@ const socket = io("http://localhost:3333");
 
 export function Chat() {
 	const { room, nome, messageList} = useContext(ChatContext)
-
-	const [message, setMessage] = useState('');
+	const [ message, setMessage ] = useState('');
 	
 
 	const sendMessage = async () => {
@@ -38,7 +37,7 @@ export function Chat() {
 
 		<div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10">
 			<div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
-			<h2>{nome}</h2>
+			<h2 className="bg-purple-300 text-center  font-bold">{nome}</h2>
 				<ScrollToBottom className="flex flex-col flex-grow h-0 p-4 overflow-auto">
 
 					{messageList.map((messageContent, index) => {

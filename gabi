@@ -1,5 +1,8 @@
- ()       Fazer a authenticate
- ()       adcionar a rota de list all
+
  ()       Corrigir os testes,
- ()       Corrigir a documentação.
- ()       Corrigir HTTP status code
+ ()       Corrigir requisição HTTP headers (token)
+
+
+
+dificuldades com o update
+dificuldades com os middlewares

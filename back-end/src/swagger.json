@@ -13,8 +13,8 @@
         "/cliente": {
             "post":{
                 "tags": ["Create"],
-                "summary": "Create a cliente",
-                "description": "Creating a new Cliente",
+                "summary": "Create a User",
+                "description": "Creating a new User",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -32,29 +32,40 @@
                                     },
                                     "cpf": {
                                         "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
                                     }
                                 },
                                 "example": {
-                                        "nome":"Gabriela",
-                                        "sobrenome":"Junior",
-                                        "telefone":"(14)98122-5756",
-                                        "cpf":"43640521838"
+                                    "password": "123",
+                                    "email": "renabto.cjunior@gmail.com",
+                                    "nome":"Renato",
+                                    "sobrenome":"Junior",
+                                    "telefone":"(14) 98122-5756",
+                                    "cpf":"43640521838"
                                 }
                             }
                         }
                     }
                 },
                 "responses": {
-                    "true": {
+                    "201": {
                         "description": "Created"
+                       
                     },
-                    "false": {
-                        "description": "Create Fail"
+                    "400": {
+                        "description": "CPF inválido. | CPF já Cadastrado. | Telefone invalido"
+                        
                     } 
+                    
 
                 }
             },
-            "GET":{
+            "put":{
                 "tags": ["List"],
                 "summary": "List by CPF",
                 "description": "List by CPF",
@@ -76,15 +87,154 @@
                     }
                 },
                 "responses": {
-                    "true": {
-                        "description": ""
+                    "201": {
+                        "description": "Sucess"
                     },
-                    "false": {
-                        "description": ""
+                    "400": {
+                        "description": "CPF não encontrado | CPF inválido."
                     } 
 
                 }
+            },
+            "delete": {
+                "tags": ["Delete"],
+                "summary": "Delete",
+                "description": "Delete User",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "cpf": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                        "cpf":"43640521838"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Deleted"
+                    },
+                    "400": {
+                        "description": "CPF não encontrado | CPF inválido."
+                    } 
+
+                }
+
+            },
+            "patch": {
+                    "tags": ["Update"],
+                    "summary": "Update",
+                    "description": "Update User",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "cpf": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "email": "renatto.cjunior@gmail.com",
+                                        "password": "123",
+                                        "nome":"Teste",
+                                        "sobrenome":"Junior",
+                                        "telefone":"(14) 98122-5756",
+                                        "cpf":"161.163.367-28",
+                                        "cpfAtual": "43640521838"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "201": {
+                            "description": "Updated"
+                        },
+                        "400": {
+                            "description": "CPF não encontrado."
+                        } 
+    
+                    }
+    
+                
+            }
+        },
+    "/auth":{
+        "post":{
+            "tags": ["Authenticate"],
+            "summary": "Authenticate User",
+            "description": "Authenticate User",
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "cpf": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "cpf": "43640521838",
+                                "password": "123"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Authentucated"
+                   
+                },
+                "400": {
+                    "description": "CPF ou Senha Inválidos."
+                    
+                } 
+                
+
             }
         }
+    },
+    "/all": {
+        "get":{
+            "tags": ["List All"],
+            "summary": "List All Users",
+            "description": "List All Users",
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                
+                            },
+                            "example": {
+                                
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Array of users"
+                   
+                }
+            }
+        }
+    }
     }
 }

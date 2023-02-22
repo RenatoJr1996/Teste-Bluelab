@@ -1,4 +1,6 @@
+import { hash } from 'bcrypt';
 import cpfValidator from 'node-cpf';
+import { AppError } from '../../errors/AppError';
 import { UsersRepository } from '../../repositories/UsersRepository';
 
 
@@ -14,30 +16,33 @@ export interface IResquestUpdate {
 }
 
 export class UpadateUser {
-    constructor (private UserRepository: UsersRepository) {}
+    constructor (private userRepository: UsersRepository) {}
 
     async execute({cpfAtual, cpf, nome, telefone, sobrenome, email, password} :IResquestUpdate) {
          
         if (!cpfValidator.validate(cpf) && !cpfValidator.validate(cpfAtual)) {
-            return{sucess:false, mensagem: "CPF inválido"};
+            throw new AppError("CPF inválido")         
         }
         const CPF = cpfValidator.mask(cpf);
         const CPFATUAL = cpfValidator.mask(cpfAtual);
         
-        const userExist = await this.UserRepository.findByCpf(CPFATUAL);
+        const userExist = await this.userRepository.findByCpf(CPFATUAL);
     
         if (!userExist) {
-            return {sucess:false, mensagem: "CPF não encontrado"};
+            throw new AppError("CPF não encontrado")
         }     
+
+        const hashpassword = await hash(password, 8)
     
-        const user = await this.UserRepository.update({
+        const user = await this.userRepository.update({
             id: userExist.id,
             nome,
             sobrenome,
             telefone,
             cpf: CPF,
             email,
-            password}
+            password:hashpassword
+        }
             );
     
             return{sucess: true, user:user}

@@ -1,20 +1,22 @@
 import axios from 'axios';
+import { kStringMaxLength } from 'buffer';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 
 interface Icontext {
-    nome: string 
-    cpf: string
-    setCpf: Dispatch<SetStateAction<string>>
-    cpfValid: boolean
-    serverMessage: string
-    chat: boolean
-    socket: Socket
-    room: string
-    messageList: IMessage[]
-    getCliente: () => Promise<void>
-    joinRoom: () => void
+    nome: string ;
+    cpf: string;
+    setCpf: Dispatch<SetStateAction<string>>;
+    setPassword: Dispatch<SetStateAction<string>>;
+    cpfValid: boolean;
+    serverMessage: string;
+    chat: boolean;
+    socket: Socket;
+    room: string;
+    messageList: IMessage[];
+    getCliente: () => Promise<void>;
+    joinRoom: () => void;
   }
 
   export interface IMessage {
@@ -35,6 +37,7 @@ interface IChatContextProvider {
 
 export function ChatContextProvider({ children }: IChatContextProvider ) {
     const [cpf, setCpf] = useState('');
+    const [password, setPassword] = useState('');
     const [nome, setName] = useState('');
     const [chat, setChat] = useState(false);
     const [cpfValid, setCpfValid] = useState(true);
@@ -45,31 +48,29 @@ export function ChatContextProvider({ children }: IChatContextProvider ) {
     const room = "123"
 
     socket.on("reSendMessage", (reSendMessage) => {
-      console.log(reSendMessage);
 
       setMessageList((list) => [...list, reSendMessage]);
-
-      
     })
     
 
     const getCliente = async () =>{
       event?.preventDefault();
-      const cliente = await axios({
-        url: "http://localhost:3333/cliente",
-        method: "put",
-        data:{cpf:cpf}
-      });
-      
-      if(cliente.data.sucess){
-        setName(cliente.data.cliente.nome);  
+
+      const user = await axios({
+        url: "http://localhost:3333/auth",
+        method: "post",
+        data:{cpf:cpf, password: password}
+      })
+
+      if(user.data.sucess){
+        setName(user.data.user.nome);  
         joinRoom();
       }
   
-      setCpfValid(cliente.data.sucess);
-      setServerMessage(cliente.data.mensagem)
+      setCpfValid(user.data.sucess);
+      setServerMessage(user.data.mensagem);  
     }
-  
+
     const joinRoom = () => {
       if (cpf !== '') {
         socket.emit('joinRoom', { room: room});
@@ -84,11 +85,12 @@ export function ChatContextProvider({ children }: IChatContextProvider ) {
         socket, 
         room,
         cpf,
-        setCpf, 
+        setCpf,
+        setPassword, 
         chat, 
         cpfValid, 
         serverMessage,
-        messageList, 
+        messageList,
         getCliente,
         joinRoom
     }}>

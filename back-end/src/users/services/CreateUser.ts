@@ -2,6 +2,7 @@
 import cpfValidator from 'node-cpf';
 import { IUsersRepository } from '../../repositories/IUserRepository';
 import { hash } from 'bcrypt'
+import { AppError } from '../../errors/AppError';
 
 
 
@@ -20,13 +21,13 @@ export class CreateCliente{
     async execute({password, email, nome, sobrenome, telefone, cpf}:IRequest) {
         
         if (!cpfValidator.validate(cpf)) {
-            return {sucess:false, mensagem:'CPF inválido.'}
+            throw new AppError('CPF inválido.')
         }
 
         const CPF = cpfValidator.mask(cpf);
 
         if (await this.userRepository.findByCpf(CPF)) {
-            return {sucess:false, mensagem:'CPF já Cadastrado.'}
+            throw new AppError('CPF já Cadastrado.')
         }
 
         const isValidPhone = (phone) => {
@@ -35,7 +36,7 @@ export class CreateCliente{
           };
 
           if(!isValidPhone(telefone)){
-            return {sucess:false, mensagem:'Telefone invalido'}
+            throw new AppError('Telefone invalido')
           } 
 
           const hashpassword = await hash(password, 8)

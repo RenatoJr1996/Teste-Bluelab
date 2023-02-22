@@ -1,9 +1,11 @@
 import { UsersRepository } from "../repositories/UsersRepository";
+import { AuthenticateUserContoller } from "./controllers/AuthenticateUserController";
 import { CreateUserController } from "./controllers/CreateUserController";
 import { DeleteUserController } from "./controllers/DeleteClienteController";
 import { ListAllController } from "./controllers/ListAllController";
 import { ListByCpfController } from "./controllers/ListByCpfController";
 import { UpdateUserController } from "./controllers/UpdateUserController";
+import { AuthenticateUser } from "./services/AuthenticateUser";
 import { CreateCliente } from "./services/CreateUser";
 import { DeleteUser } from "./services/DeleteUser";
 import { ListAllUsers } from "./services/ListAllUsers";
@@ -29,3 +31,6 @@ export const updateUserController = new UpdateUserController(updateUser);
 
 const listAll = new ListAllUsers(userRepository)
 export const listAllController = new ListAllController(listAll);
+
+const authenticateUser = new AuthenticateUser(userRepository);
+export const authenticateUserContoller = new AuthenticateUserContoller(authenticateUser);

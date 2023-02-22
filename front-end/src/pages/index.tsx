@@ -10,7 +10,7 @@ import { ChatContext } from '@/contexts/context';
 
 
 
-const socket = io("http://localhost:3333");
+
 
 export default function Home() {
 const { chat } = useContext(ChatContext)
@@ -24,7 +24,7 @@ const { chat } = useContext(ChatContext)
         <link rel="icon" href="/favicon.ico" />
       </Head>
     
-      { chat ?  <Chat /> :   <Authenticate /> }
+      { chat ?  <Chat /> : <Authenticate /> }
     </>
   )
 }

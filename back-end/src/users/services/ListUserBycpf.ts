@@ -1,4 +1,5 @@
 import cpfValidator from 'node-cpf';
+import { AppError } from '../../errors/AppError';
 import { UsersRepository } from '../../repositories/UsersRepository';
 
 
@@ -12,14 +13,14 @@ export class ListUserBycpf{
     async execute({cpf}:IRequest) {
          
     if (!cpfValidator.validate(cpf)) {
-        return{sucess:false, mensagem: "CPF inválido"};
+        throw new AppError("CPF inválido.")
     }
     const CPF = cpfValidator.mask(cpf);
 
     const userExist = await this.userRepository.findByCpf(CPF);
     
     if (!userExist) {
-        return {sucess:false, mensagem: "CPF não encontrado"};
+      throw new AppError("CPF não encontrado");
     }     
 
         return{sucess: true, user:userExist}
