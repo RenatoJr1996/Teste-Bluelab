@@ -1,3 +1,4 @@
+import { login } from '@/services/Auth';
 import axios from 'axios';
 import { kStringMaxLength } from 'buffer';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
@@ -63,7 +64,8 @@ export function ChatContextProvider({ children }: IChatContextProvider ) {
       })
 
       if(user.data.sucess){
-        setName(user.data.user.nome);  
+        setName(user.data.user.nome);
+        login(user.data.token)
         joinRoom();
       }
   

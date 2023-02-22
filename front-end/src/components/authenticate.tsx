@@ -1,6 +1,7 @@
 import { ChatContext } from "@/contexts/context";
 import { useContext, useState } from "react";
 import { Header } from "./Header";
+import { Input } from "./Input";
 
 
 export function Authenticate() {
@@ -11,7 +12,7 @@ export function Authenticate() {
     return(
         <main className="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
 
-        <Header title='Welcome to a BlueLab teste' span='Sign in to your chat.'/>
+        <Header title='Welcome to a BlueLab teste' span='Entre para acessar o chat.'/>
 
         <section className="mt-10">
           {
@@ -25,16 +26,11 @@ export function Authenticate() {
           } 
 
             <form className="flex flex-col" method="POST" action="#">
-                <div className="mb-6 pt-3 rounded bg-gray-200">
-                    <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="cpf">CPF</label>
-                    <input  onChange={({ target }) => { setCpf(target.value) }} type="text" id="cpf" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"/>
-                </div>
-                <div className="mb-6 pt-3 rounded bg-gray-200">
-                    <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="Password">Senha</label>
-                    <input  onChange={({ target }) => { setPassword(target.value) }} type="password" id="Password" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"/>
-                </div>
+                <Input title="CPF" type="text" onChange={({ target }) => { setCpf(target.value) }} />
+                <Input onChange={({ target }) => { setPassword(target.value) }} type="password" title="Senha" />
+                
                 <div className="flex justify-end">
-                    <a href="http://localhost:3000/CreateAccount" className="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6">Create account</a>
+                    <a href="http://localhost:3000/CreateAccount" className="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6">Criar Conta!</a>
 
                 </div>
                 <button onClick={getCliente} className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">Sign In</button>

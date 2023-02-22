@@ -1,13 +1,10 @@
 import Head from 'next/head'
-import io, { Socket } from 'socket.io-client'
 import { useContext, useState } from 'react';
 import { Chat } from '@/components/Chat';
-import axios from 'axios';
+
 
 import { Authenticate } from '@/components/authenticate';
 import { ChatContext } from '@/contexts/context';
-
-
 
 
 

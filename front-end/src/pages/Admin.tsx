@@ -1,4 +1,5 @@
 import { ChatContext } from "@/contexts/context";
+import { api } from "@/services/axios";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 
@@ -20,9 +21,7 @@ export default function AdminPage() {
 
 
     const listall = async () => {
-        const users = await axios({
-            url:"http://localhost:3333/all",
-        })
+        const users = await api.get('/all')
 
         setListUsers(users.data.user);
     }
