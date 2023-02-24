@@ -9,9 +9,11 @@ export class ListByCpfController {
 
     async handle( request:Request, response:Response){
         const  { cpf }  = request.body;
+        console.log(cpf);
+        
        
         const res = await this.listByCpf.execute({cpf})
 
-        return response.status(201).json({sucess: res.sucess, mensagem: res.mensagem, user: res.user});
+        return response.status(201).json({sucess: res.sucess, user: res.user});
     }
 }

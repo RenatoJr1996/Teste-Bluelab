@@ -10,7 +10,7 @@
 
     },
     "paths": {
-        "/cliente": {
+        "/user": {
             "post":{
                 "tags": ["Create"],
                 "summary": "Create a User",

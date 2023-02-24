@@ -26,6 +26,6 @@ export class DeleteUser{
 
     const Users = await this.UserRepository.delete(UserExist.id);
 
-        return{sucess: true}
+        return{sucess: true, mensagem: "Deletado com sucesso"}
     }
 } 

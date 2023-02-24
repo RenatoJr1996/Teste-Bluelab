@@ -15,7 +15,7 @@ interface IRequest {
     password: string;
 }
 
-export class CreateCliente{
+export class CreateUser{
     constructor (private userRepository: IUsersRepository) {}
 
     async execute({password, email, nome, sobrenome, telefone, cpf}:IRequest) {
@@ -43,6 +43,6 @@ export class CreateCliente{
 
          this.userRepository.create({ password: hashpassword, email, nome, sobrenome, telefone, cpf: CPF }); 
 
-        return{sucess: true, mensagem: "Cliente cadastrado com sucesso."}
+        return{sucess: true, mensagem: "User cadastrado com sucesso."}
     }
 } 

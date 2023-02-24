@@ -17,6 +17,6 @@ export class UpdateUserController {
         const res = await this.updateUser.execute({cpfAtual, cpf, nome, telefone, sobrenome, email, password})
 
 
-        return response.status(201).json({sucess: res.sucess, mensagem: res.mensagem});
+        return response.status(201).json({sucess: res.sucess});
     }
 }

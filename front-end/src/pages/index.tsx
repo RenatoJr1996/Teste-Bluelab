@@ -1,14 +1,10 @@
 import Head from 'next/head'
-import { useContext, useState } from 'react';
-import { Chat } from '@/components/Chat';
-
-
-import { Authenticate } from '@/components/authenticate';
+import { useContext } from 'react';
+import { Chat } from '@/components/home/chat/Chat';
+import { Authenticate } from '@/components/home/Authenticate/authenticate';
 import { ChatContext } from '@/contexts/context';
 
-
-
-
+  
 export default function Home() {
 const { chat } = useContext(ChatContext)
 

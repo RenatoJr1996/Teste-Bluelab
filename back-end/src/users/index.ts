@@ -1,12 +1,12 @@
 import { UsersRepository } from "../repositories/UsersRepository";
 import { AuthenticateUserContoller } from "./controllers/AuthenticateUserController";
 import { CreateUserController } from "./controllers/CreateUserController";
-import { DeleteUserController } from "./controllers/DeleteClienteController";
+import { DeleteUserController } from "./controllers/DeleteUserController";
 import { ListAllController } from "./controllers/ListAllController";
 import { ListByCpfController } from "./controllers/ListByCpfController";
 import { UpdateUserController } from "./controllers/UpdateUserController";
 import { AuthenticateUser } from "./services/AuthenticateUser";
-import { CreateCliente } from "./services/CreateUser";
+import { CreateUser } from "./services/CreateUser";
 import { DeleteUser } from "./services/DeleteUser";
 import { ListAllUsers } from "./services/ListAllUsers";
 import { ListUserBycpf } from "./services/ListUserBycpf";
@@ -16,7 +16,7 @@ import { UpadateUser } from "./services/UpdateUser";
 
 const userRepository = new UsersRepository();
 
-const createUser = new CreateCliente(userRepository);
+const createUser = new CreateUser(userRepository);
 export const createUserController = new CreateUserController(createUser);
 
 

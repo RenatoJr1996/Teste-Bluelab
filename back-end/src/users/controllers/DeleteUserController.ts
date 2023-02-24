@@ -6,12 +6,12 @@ import { DeleteUser } from "../services/DeleteUser";
 
 export class DeleteUserController {
 
-    constructor(private userCliente: DeleteUser){}
+    constructor(private deleteUSer: DeleteUser){}
 
     async handle( request:Request, response:Response){
         const { cpf } = request.body;
 
-        const res = await this.userCliente.execute({cpf})
+        const res = await this.deleteUSer.execute({cpf})
 
         return response.status(201).json({sucess: res.sucess, mensagem: res.mensagem, });
     }

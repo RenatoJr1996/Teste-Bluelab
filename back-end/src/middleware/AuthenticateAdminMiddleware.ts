@@ -14,8 +14,6 @@ import { UsersRepository } from "../repositories/UsersRepository";
 export async function AuthenticateAdminMiddleware(request: Request, response: Response, next: NextFunction) {
     
     const authHeader = request.headers.authorization;
-    console.log(authHeader);
-    
 
     if(!authHeader) {
         throw new AppError("Token missing", 401);

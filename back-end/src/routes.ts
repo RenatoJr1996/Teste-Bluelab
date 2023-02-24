@@ -1,31 +1,30 @@
 import { Router } from 'express'
 import { createUserController, deleteUserController, listByCpfController, listAllController, updateUserController, authenticateUserContoller, } from './users';
-import { AuthenticateUserMiddleware } from './middleware/AuthenticateUsermiddleware';
 import { AuthenticateAdminMiddleware } from './middleware/AuthenticateAdminMiddleware';
 export const routes = Router();
 
 
-routes.post("/cliente", (request, response) => {
+routes.post("/user", (request, response) => {
     return createUserController.handle(request, response);
 });
 
-routes.post('/auth', (request, response) => {
+routes.post('/auth',(request, response) => {
     return authenticateUserContoller.handle(request, response);
 });
 
-routes.delete("/cliente", (request, response) => {
+routes.delete("/user",AuthenticateAdminMiddleware ,(request, response) => {
     return deleteUserController.handle(request, response);
 });
 
-routes.patch("/cliente", (request, response) => {
+routes.patch("/user", (request, response) => {
     return updateUserController.handle(request, response);
 });
 
-routes.get("/all", AuthenticateUserMiddleware, (request, response) => {
+routes.get("/all", AuthenticateAdminMiddleware, (request, response) => {
     return listAllController.handle(request, response);
 });
 
-routes.put("/cliente", (request, response) => {
+routes.put("/user", (request, response) => {
     return listByCpfController.handle(request, response);
 });
 
