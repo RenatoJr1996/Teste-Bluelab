@@ -18,7 +18,6 @@ export class UpadateUser {
     constructor (private userRepository: UsersRepository) {}
 
     async execute({cpfAtual, cpf, nome, telefone, sobrenome, email} :IResquestUpdate) {
-         
         if (!cpfValidator.validate(cpf) && !cpfValidator.validate(cpfAtual)) {
             throw new AppError("CPF inválido")         
         }

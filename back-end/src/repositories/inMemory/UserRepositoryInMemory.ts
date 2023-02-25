@@ -1,7 +1,7 @@
 
 import { Users } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import e from 'express';
+
 import { User } from '../../models/UsersModel'
 import { IResquestUpdate } from '../../users/services/UpdateUser';
 import { ICreateUsersDTO, IUsersRepository } from "../IUserRepository";
@@ -13,7 +13,7 @@ export class UsersRepositoryInMemory implements IUsersRepository{
    
 
 
-    async create({ email, password, nome, sobrenome, telefone, cpf}: ICreateUsersDTO ):Promise<User>{
+    async create({ email, password, nome, sobrenome, telefone, cpf}: ICreateUsersDTO ):Promise<Users>{
         const user = new User();
         
         Object.assign(user, {

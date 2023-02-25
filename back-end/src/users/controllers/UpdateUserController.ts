@@ -12,9 +12,9 @@ export class UpdateUserController {
         ){}
 
     async handle( request:Request, response:Response){
-        const {cpfAtual, cpf, nome, telefone, sobrenome, email, password } = request.body;
+        const {cpfAtual, cpf, nome, telefone, sobrenome, email} = request.body;
 
-        const res = await this.updateUser.execute({cpfAtual, cpf, nome, telefone, sobrenome, email, password})
+        const res = await this.updateUser.execute({cpfAtual, cpf, nome, telefone, sobrenome, email})
 
 
         return response.status(201).json({sucess: res.sucess});

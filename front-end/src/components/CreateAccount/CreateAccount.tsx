@@ -23,16 +23,6 @@ export default function CreateAccount() {
     const [serverMessage, setServerMessage] = useState('');
 
 
-    
-    const FormData = z.object({
-        name: z.string().min(3).max(18),
-        sobrenome: z.string().min(3).max(18),
-        cpf: z.string().min(11).max(14),
-        email: z.string().email(),
-        password:z.string().min(6)
-      });
-
-      type UserFormData = z.infer<typeof FormData >
 
     const createUser = async () => {
         event?.preventDefault();
@@ -69,7 +59,6 @@ export default function CreateAccount() {
                 <Alink  href="/" title="Login" />
 
                 <Button onClick={createUser} title="Criar" />
-     
             </Form>
 
         </FormBox>
