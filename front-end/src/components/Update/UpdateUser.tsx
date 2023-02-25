@@ -15,10 +15,8 @@ interface Props {
 
 
 export default function UptdateAccount(userCPF:Props) {
-  
     const [cpf, setCpf] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [phone, setPhone] = useState('');
@@ -26,8 +24,6 @@ export default function UptdateAccount(userCPF:Props) {
     const [serverMessage, setServerMessage] = useState('');
 
     const findUser = async () =>{
-        console.log(userCPF);
-        
         const user = await api.put('/user', {
             data: { userCPF}
         });

@@ -12,13 +12,12 @@ export interface IResquestUpdate {
     cpf: string;
     cpfAtual?: string
     email: string
-    password: string
 }
 
 export class UpadateUser {
     constructor (private userRepository: UsersRepository) {}
 
-    async execute({cpfAtual, cpf, nome, telefone, sobrenome, email, password} :IResquestUpdate) {
+    async execute({cpfAtual, cpf, nome, telefone, sobrenome, email} :IResquestUpdate) {
          
         if (!cpfValidator.validate(cpf) && !cpfValidator.validate(cpfAtual)) {
             throw new AppError("CPF inválido")         
@@ -32,8 +31,7 @@ export class UpadateUser {
             throw new AppError("CPF não encontrado")
         }     
 
-        const hashpassword = await hash(password, 8)
-    
+       
         const user = await this.userRepository.update({
             id: userExist.id,
             nome,
@@ -41,7 +39,6 @@ export class UpadateUser {
             telefone,
             cpf: CPF,
             email,
-            password:hashpassword
         }
             );
     

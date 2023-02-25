@@ -16,10 +16,11 @@ export interface ICreateUsersDTO {
 
 export interface IUsersRepository {
     create({nome, sobrenome, telefone, cpf, email, password }:ICreateUsersDTO):Promise<User>;
-    findByCpf(cpf:string):Promise<Users>;
-    findbyId(id:string):Promise<Users>;
-    list(): Promise<Users[]>;
-    delete(id:string):Promise<Users[]>;
-    update({id, nome, sobrenome, telefone, cpf, email, password}: IResquestUpdate):Promise<Users>;
+    findByCpf(cpf:string):Promise<User>;
+    findByEmail(email:string):Promise<User>;
+    findbyId(id:string):Promise<User>;
+    list(): Promise<User[]>;
+    delete(id:string):Promise<User[]>;
+    update({id, nome, sobrenome, telefone, cpf, email}: IResquestUpdate):Promise<User>;
 }
 

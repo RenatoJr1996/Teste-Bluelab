@@ -1,6 +1,6 @@
 
-import { UsersRepository } from "../../../repositories/UsersRepository";
-import { ListAllUsers } from "../ListAllUsers";
+import { UsersRepository } from "../repositories/UsersRepository";
+import { ListAllUsers } from "../users/services/ListAllUsers";
 
 
 

@@ -34,7 +34,13 @@ export class UsersRepository implements IUsersRepository{
         return users;
     }
 
-
+    async findByEmail(email: string):Promise<Users>{
+        const user = await prisma.users.findFirst({
+            where: { email }
+        })
+        
+        return user;
+    }
 
     async findByCpf(cpf:string):Promise<Users> {
         const user = await prisma.users.findFirst({
@@ -61,13 +67,13 @@ export class UsersRepository implements IUsersRepository{
     }
 
 
-    async update({  id, nome, sobrenome, telefone, cpf, email, password  }: IResquestUpdate ): Promise<Users> {
+    async update({  id, nome, sobrenome, telefone, cpf, email }: IResquestUpdate ): Promise<Users> {
         const updatedUser = await prisma.users.update({
             where: {
               id: id,
             },
             data: {
-                id, nome, sobrenome, telefone, cpf, email, password
+                id, nome, sobrenome, telefone, cpf, email
             },
           })
 

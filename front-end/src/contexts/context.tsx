@@ -1,5 +1,3 @@
-import { login } from '@/services/Auth';
-import { api } from '@/services/Axios';
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
@@ -50,7 +48,6 @@ export function ChatContextProvider({ children }: IChatContextProvider ) {
         setChat,
         setName,
         messageList,
-
     }}>
 
       {children}

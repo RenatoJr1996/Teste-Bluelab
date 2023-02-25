@@ -21,13 +21,17 @@ export class CreateUser{
     async execute({password, email, nome, sobrenome, telefone, cpf}:IRequest) {
         
         if (!cpfValidator.validate(cpf)) {
-            throw new AppError('CPF inválido.')
+            throw new AppError('CPF inválido.');
         }
 
         const CPF = cpfValidator.mask(cpf);
 
         if (await this.userRepository.findByCpf(CPF)) {
-            throw new AppError('CPF já Cadastrado.')
+            throw new AppError('CPF já Cadastrado.');
+        }
+
+        if (await this.userRepository.findByEmail(email)) {
+            throw new AppError('Email já Cadastrado.');
         }
 
         const isValidPhone = (phone) => {
@@ -36,7 +40,7 @@ export class CreateUser{
           };
 
           if(!isValidPhone(telefone)){
-            throw new AppError('Telefone invalido')
+            throw new AppError('Telefone invalido');
           } 
 
           const hashpassword = await hash(password, 8)
