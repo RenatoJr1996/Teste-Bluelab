@@ -1,17 +1,18 @@
-import { ReactNode } from "react";
+import { FormHTMLAttributes, forwardRef, ReactNode } from "react";
 
 
 
-interface Iform {
+interface Iform extends FormHTMLAttributes<HTMLFormElement> {
     children: ReactNode;
   }
 
 
 
-export function Form({children}: Iform ) {
+export const Form = forwardRef<HTMLFormElement, Iform> (({children,...rest  }: Iform, ref) => {
     return(
-        <form className="flex flex-col" >
+        <form {...rest} className="flex flex-col" >
             {children}
         </form>
     )
 }
+)

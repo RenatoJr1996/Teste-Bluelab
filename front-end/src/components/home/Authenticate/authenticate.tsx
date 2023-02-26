@@ -4,46 +4,46 @@ import { Header } from "../../UseFul/Header";
 import { Input } from "../../UseFul/Input";
 import { api } from "@/services/Axios";
 import { login } from "@/services/Auth";
-import { ServerSucessMessage } from "../../Server Message/ServerSucessMessage";
-import { ServerFailMessage } from "../../Server Message/ServerFailMessage";
 import { FormBox } from "@/components/UseFul/FormBox";
 import { Form } from "@/components/UseFul/Form";
 import { Alink } from "@/components/UseFul/Alink";
 import { Button } from "@/components/UseFul/Button";
-import Image from 'next/image'
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod'
 
+const AuthenticateSchema = z.object({
+  CPF: z.string()
+    .min(11, {message: 'CPF inválido'})
+    .max(14, {message: 'CPF inválido'})
+    .regex(/^([0-9/.\\-]+)$/, {message: 'CPF deve conter apenas numeros, ., -'}) ,
+  password: z.string()
+    .min(6, {message:'A senha deve conter pelo menos 6 caracteres'} )
+})
 
+type AuthenticateData = z.infer<typeof AuthenticateSchema>
 
 export function Authenticate() {
   const { socket, room, setName, setChat } = useContext(ChatContext);
-  const [cpf, setCpf] = useState('');
-  const [password, setPassword] = useState('');
-  const [messageStatus, setMessageStatus] = useState(false);
-  const [serverMessage, setServerMessage] = useState('');
-
-  const getUser = async () => {
-    event?.preventDefault();
-
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<AuthenticateData>({ resolver: zodResolver(AuthenticateSchema)})
+ 
+  const getUser = async (data: AuthenticateData) => {
     const user = await api.post("/auth", {
-      cpf: cpf,
-      password: password
+      cpf: data.CPF,
+      password: data.password
     });
 
-    if (user.data.sucess) {
+    if (!user.data.sucess) {
+      return alert(user.data.mensagem)
+    }
+
       setName(user.data.user.nome);
+
       login(user.data.token);
-      joinRoom();
-    }
 
-    setMessageStatus(user.data.sucess);
-    setServerMessage(user.data.mensagem);
-  }
-
-  const joinRoom = () => {
-    if (cpf !== '') {
       socket.emit('joinRoom', { room: room });
+
       setChat(true);
-    }
   }
 
   return (
@@ -51,15 +51,13 @@ export function Authenticate() {
       <FormBox>
         <Header title='Seja Bem-vindo ao Bluelab teste' span='Entre para acessar o chat.' />
 
-        {messageStatus ? <ServerSucessMessage message={serverMessage} /> : <ServerFailMessage message={serverMessage} />}
-
-        <Form>
-          <Input title="CPF" type="text" onChange={({ target }) => { setCpf(target.value) }} />
-          <Input onChange={({ target }) => { setPassword(target.value) }} type="password" title="Senha" />
+        <Form onSubmit={handleSubmit(getUser)} >
+          <Input {...register("CPF")} title="CPF" type="text" errorMessage={errors.CPF?.message}/>
+          <Input {...register("password")} type="password" title="Senha" errorMessage={errors.password?.message} />
 
           <Alink href="http://localhost:3000/CreateAccount" title="Criar Conta" />
 
-          <Button onClick={getUser} title="Entrar" />
+          <Button disabled= {isSubmitting} title="Entrar" />
         </Form>
       </FormBox>
     </div>

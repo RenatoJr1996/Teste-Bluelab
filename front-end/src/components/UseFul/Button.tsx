@@ -1,13 +1,13 @@
-import { MouseEventHandler } from "react"
+import { ButtonHTMLAttributes, forwardRef} from "react"
 
-interface Props{
-    onClick: MouseEventHandler<HTMLButtonElement>
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement>{
     title: string
 }
 
-
-export function Button({onClick, title}: Props){
+export const Button = forwardRef<HTMLButtonElement, Props>(({title,...rest}: Props, ref) => {
     return(
-        <button onClick={onClick} className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">{title}</button>
+        <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">{title}</button>
     )
-}
+    }
+)
+
