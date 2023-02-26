@@ -47,6 +47,6 @@ export class CreateUser{
 
          this.userRepository.create({ password: hashpassword, email, nome, sobrenome, telefone, cpf: CPF }); 
 
-        return{sucess: true, mensagem: "User cadastrado com sucesso."}
+        return{sucess: true, mensagem: "Usuario cadastrado com sucesso."}
     }
 } 
