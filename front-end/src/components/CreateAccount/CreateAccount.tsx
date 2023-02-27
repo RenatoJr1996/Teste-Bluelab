@@ -1,7 +1,6 @@
 import { Header } from "@/components/UseFul/Header";
 import { Input } from "@/components/UseFul/Input";
 import { api } from "@/services/Axios";
-import { useState } from "react";
 import { z } from 'zod'
 import { FormBox } from "../UseFul/FormBox";
 import { Form } from "../UseFul/Form";
@@ -10,6 +9,7 @@ import { Button } from "../UseFul/Button";
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import { AxiosError } from "axios";
 
 
 const CreateAccountSchema = z.object({
@@ -42,6 +42,8 @@ export default function CreateAccount() {
 
 
     const createUser = async (data:CreateAccountData) => {
+        try {
+
         const user = await api.post("/user", { 
             nome: data.name, 
             sobrenome: data.lastName, 
@@ -56,9 +58,17 @@ export default function CreateAccount() {
           }
 
         alert(user.data.mensagem);
-        router.push('/')
+        await router.push('/')
+
+    } catch (error) {
+
+        if(error instanceof AxiosError && error?.response?.data?.message){
+            alert(error.response.data.message)
+        }
+        
     }
 
+    }
 
 
     return (

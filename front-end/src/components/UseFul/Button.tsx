@@ -6,7 +6,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement>{
 
 export const Button = forwardRef<HTMLButtonElement, Props>(({title,...rest}: Props, ref) => {
     return(
-        <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">{title}</button>
+        <button {...rest} className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">{title}</button>
     )
     }
 )

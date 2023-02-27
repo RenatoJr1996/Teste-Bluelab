@@ -1,4 +1,5 @@
 import { api } from "@/services/Axios";
+import { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Modal } from "../UseFul/Modal";
@@ -22,16 +23,30 @@ export function TableBody() {
     const { reload } = useRouter();
 
     const listall = async () => {
-        const users = await api.get('/all')
-
-        setListUsers(users.data.user);
+        try {
+            const users = await api.get('/all')
+    
+            setListUsers(users.data.user);
+        } catch (error) {
+            if(error instanceof AxiosError && error?.response?.data?.mensagem){
+                alert(error.response.data.mensagem)
+            }
+        }
     }
 
     const deleteUser = async (cpf: string) => {
+
+        try {
         await api.delete('/user', { data: { cpf } })
 
         alert('Usuario deletado com successo');
         reload();
+
+        } catch (error) {
+            if(error instanceof AxiosError && error?.response?.data?.mensagem){
+                alert(error.response.data.mensagem)
+            }
+        }
 
     }
 

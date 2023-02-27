@@ -11,6 +11,7 @@ import { Button } from "@/components/UseFul/Button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from "axios";
 
 const AuthenticateSchema = z.object({
   CPF: z.string()
@@ -28,7 +29,8 @@ export function Authenticate() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<AuthenticateData>({ resolver: zodResolver(AuthenticateSchema)})
  
   const getUser = async (data: AuthenticateData) => {
-    const user = await api.post("/auth", {
+    try {
+          const user = await api.post("/auth", {
       cpf: data.CPF,
       password: data.password
     });
@@ -44,6 +46,14 @@ export function Authenticate() {
       socket.emit('joinRoom', { room: room });
 
       setChat(true);
+    } catch (error) {
+      
+      if(error instanceof AxiosError && error?.response?.data?.message){
+          alert(error.response.data.message)
+      }
+  }
+
+
   }
 
   return (
