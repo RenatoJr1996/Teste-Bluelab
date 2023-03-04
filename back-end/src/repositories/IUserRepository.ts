@@ -1,4 +1,3 @@
-import { Users } from "@prisma/client";
 import { User } from "../models/UsersModel";
 import { IResquestUpdate } from "../users/services/UpdateUser";
 

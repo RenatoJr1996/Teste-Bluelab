@@ -25,34 +25,34 @@ const AuthenticateSchema = z.object({
 type AuthenticateData = z.infer<typeof AuthenticateSchema>
 
 export function Authenticate() {
-  const { socket, room, setName, setChat } = useContext(ChatContext);
+  const { setUserID, setName, setChat } = useContext(ChatContext);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<AuthenticateData>({ resolver: zodResolver(AuthenticateSchema)})
  
   const getUser = async (data: AuthenticateData) => {
     try {
-          const user = await api.post("/auth", {
-      cpf: data.CPF,
-      password: data.password
-    });
 
-    if (!user.data.sucess) {
-      return alert(user.data.mensagem)
-    }
+      const user = await api.post("/auth", {
+          cpf: data.CPF,
+          password: data.password
+        });
 
-      setName(user.data.user.nome);
+        if (!user.data.sucess) {
+          return alert(user.data.mensagem)
+        }
 
-      login(user.data.token);
+          setName(user.data.user.nome);
+          setUserID(user.data.user.id);
 
-      socket.emit('joinRoom', { room: room });
+          login(user.data.token);
 
-      setChat(true);
+          setChat(true);
+
     } catch (error) {
       
-      if(error instanceof AxiosError && error?.response?.data?.message){
-          alert(error.response.data.message)
-      }
-  }
-
+        if(error instanceof AxiosError && error?.response?.data?.message){
+            alert(error.response.data.message)
+        }
+    }
 
   }
 

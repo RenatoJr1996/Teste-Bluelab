@@ -5,9 +5,19 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerFile from './swagger.json'
 import http from 'http'
 import cors from 'cors'
-import { Server } from 'socket.io'
-import { AuthenticateUserMiddleware } from './middleware/AuthenticateUsermiddleware';
+import { Server, Socket } from 'socket.io'
 import { AppError } from './errors/AppError';
+import { randomUUID } from 'crypto';
+import { SocketRepositoryInMemory } from './repositories/inMemory/SocketRepositoryInMemory'
+import { socketListAllSessionController, socketsaveSesionController } from './socket';
+
+
+interface ISocketIO extends Socket{
+  user : string
+  sessionID: string
+  userID: string
+}
+
 
 export const app = express()
 
@@ -37,19 +47,62 @@ export const io = new Server(server, {
     }
 });
 
-io.on("connection", (socket) => {
-    
-    
-    socket.on("joinRoom", ({room}) => {
-        console.log(socket.id);
-        socket.join(room);
-    })
+const sessionRepository = new SocketRepositoryInMemory();
 
-    socket.on("sendMessage", async (message) => {
-        socket.to(message.room).emit("reSendMessage",message)
-    })
+io.use((socket: ISocketIO, next) => {
+  const sessionID = socket.handshake.auth.sessionID;
 
-    socket.on("disconnect", () => {
-        
-    })
+  if (sessionID) {
+
+    const session = sessionRepository.findSession(sessionID);
+    console.log(session);
+    
+    if (session) {
+      socket.sessionID = sessionID;
+      socket.userID = session.userID;
+      socket.user = session.user
+      return next();
+    }
+  }
+
+  socket.sessionID = randomUUID();
+  socket.userID = randomUUID();
+  socket.user = socket.handshake.auth.nome;
+  socket.userID = socket.handshake.auth.userID;
+
+  next();
 });
+
+const users = [];
+
+io.on("connection", async (socket: ISocketIO) => {
+
+  socketsaveSesionController.handle({sessionID: socket.sessionID, userID: socket.userID, user: socket.user})
+
+  socket.emit("session", {
+    sessionID: socket.sessionID,
+    userID: socket.userID,
+  });
+
+  socket.join(socket.userID);
+  
+  (await socketListAllSessionController.handle()).map(session => {
+    users.push({user: session.user, userID: session.userID})
+  })
+
+  socket.broadcast.emit("users", users);
+  
+  socket.on("getUser", () => {
+    socket.emit("userGet", users)
+  })
+  
+
+  socket.on("disconnect", () => {
+    sessionRepository.deleteSession(socket.userID);
+    socket.broadcast.emit("users", users);
+    console.log(`User disconnected ${socket.id}`);
+  })
+});
+
+
+
