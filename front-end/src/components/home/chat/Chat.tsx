@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { Form } from "@/components/UseFul/Form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { UsersAvatar } from "./UsersAvatar";
 
 
@@ -23,15 +23,16 @@ export interface IUSer{
 
 export function Chat() {
 	const {userID, nome} = useContext(ChatContext)
-	const [chatUSerName, setchatUSerName] = useState('');
+	const [selectedUser, setSeletectedUser] = useState<IUSer>();
 	const [userConnected, setUsersConected] = useState<IUSer[]>([]);
-	const { register, handleSubmit } = useForm<ChatData>({ resolver: zodResolver(ChatSchema) })
+	const { register, handleSubmit } = useForm();
 
 	const socket = io("http://localhost:3333", { autoConnect: false });
 
 // start connection and list the users
 	useEffect(() => {
 		const sessionID = localStorage.getItem("sessionID");
+
 		socket.auth = {sessionID: sessionID, nome: nome, userID: userID  };
 
 		socket.connect();
@@ -52,14 +53,18 @@ export function Chat() {
 // update list of online users		
 	useEffect(() => {
 		socket.on("users", (users) =>{
-			setUsersConected(users)
+			setUsersConected(users);
 		});
+		
 
-		socket.on('session', ({sessionID, userID}) => {
+		socket.on('session', ({sessionID}) => {
 			localStorage.setItem("sessionID", sessionID)
-			
 		})
 
+		return () => {
+			socket.off("user");	
+			socket.off("session");	
+		}
 	},[socket])
 
 	const mySelf = (id: string) => {
@@ -70,20 +75,25 @@ export function Chat() {
     }
 
 
-	const sendMessage = async (data: ChatData) => {
 
-		const newMessage = {
-			name: chatUSerName,
+	const sendMessage =  (data: any) => {
+
+		const message = {
+			nome,
+			userID,
+			name: selectedUser,
 			message: data.message,
 			time: new Date().getHours() + ":" + new Date().getMinutes()
-		};
+		}
 
-		socket.emit("sendMessage", newMessage);
-
+		socket.emit("sendMessage", message)	
 	}
 
+
+
+
 	return (
-		<Form >
+		<Form onSubmit={handleSubmit(sendMessage)}>
 			<div>
 				<div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-200 text-gray-800 p-10">
 					<div className="flex flex-row  w-full max-w-xl overflow-auto scroll">
@@ -91,7 +101,7 @@ export function Chat() {
 						{
 							userConnected.map((user, index) => {
 								return (
-									<div onClick={() => setchatUSerName(user.user) } key={index}>
+									<div onClick={() => setSeletectedUser(user) } key={index}>
 										{mySelf(user.userID) ? <UsersAvatar user={user.user} /> : <div></div>}
 									</div>
 								)
@@ -100,7 +110,7 @@ export function Chat() {
 
 					</div>
 					<div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
-						<h2 className="bg-green-600 text-center font-bold">{chatUSerName}</h2>
+						<h2 className="bg-green-600 text-center font-bold">{selectedUser?.user}</h2>
 
 						<MessageArea />
 						
@@ -111,6 +121,7 @@ export function Chat() {
 								type="text"
 								placeholder="Type your message…"
 							/>
+							<button type="submit" >PING</button>
 						</div>
 
 					</div>

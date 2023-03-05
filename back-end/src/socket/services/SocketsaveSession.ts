@@ -9,7 +9,12 @@ export class SocketsaveSession{
 
     async execute(sessionID, userID, user) {
          
-    this.socketRepository.saveSession({sessionID, userID, user})
-
-}
+    const session = this.socketRepository.findSession(sessionID)
+        
+    if(!session) {
+        console.log(`session ${sessionID} created`);
+        
+        this.socketRepository.saveSession({sessionID, userID, user})
+    }
+    }
 }

@@ -9,7 +9,8 @@ import { Server, Socket } from 'socket.io'
 import { AppError } from './errors/AppError';
 import { randomUUID } from 'crypto';
 import { SocketRepositoryInMemory } from './repositories/inMemory/SocketRepositoryInMemory'
-import { socketListAllSessionController, socketsaveSesionController } from './socket';
+import { socketDeleteSessionController, socketFindSessionController, socketListAllSessionController, socketsaveSesionController } from './socket';
+import { Session } from './models/SocketModel';
 
 
 interface ISocketIO extends Socket{
@@ -47,15 +48,13 @@ export const io = new Server(server, {
     }
 });
 
-const sessionRepository = new SocketRepositoryInMemory();
+const sessions = [];
 
-io.use((socket: ISocketIO, next) => {
+io.use(async (socket: ISocketIO, next) => {
   const sessionID = socket.handshake.auth.sessionID;
-
+  
   if (sessionID) {
-
-    const session = sessionRepository.findSession(sessionID);
-    console.log(session);
+    const session = sessions.find(session => session.sessionID === sessionID )
     
     if (session) {
       socket.sessionID = sessionID;
@@ -66,18 +65,29 @@ io.use((socket: ISocketIO, next) => {
   }
 
   socket.sessionID = randomUUID();
-  socket.userID = randomUUID();
   socket.user = socket.handshake.auth.nome;
   socket.userID = socket.handshake.auth.userID;
-
   next();
 });
 
-const users = [];
+
 
 io.on("connection", async (socket: ISocketIO) => {
+  console.log("Sessions data ",sessions);
+  
+  socket.user = socket.handshake.auth.nome;
+  socket.userID = socket.handshake.auth.userID;
+  if(!sessions.find(session => session.userID === socket.userID )){
+      const session = new Session();
 
-  socketsaveSesionController.handle({sessionID: socket.sessionID, userID: socket.userID, user: socket.user})
+      Object.assign(session, {
+          user: socket.user,
+          sessionID: randomUUID(),
+          userID: socket.userID
+      })
+      
+      sessions.push(session)
+  }
 
   socket.emit("session", {
     sessionID: socket.sessionID,
@@ -85,22 +95,22 @@ io.on("connection", async (socket: ISocketIO) => {
   });
 
   socket.join(socket.userID);
+
   
-  (await socketListAllSessionController.handle()).map(session => {
-    users.push({user: session.user, userID: session.userID})
+  // socket.broadcast.emit("users",sessions);
+  
+  // socket.on("getUser", () => {
+  //   socket.emit("userGet", sessions)
+  // })
+
+  socket.on("sendMessage", (data) => {
+    console.log(data);
+    
   })
 
-  socket.broadcast.emit("users", users);
-  
-  socket.on("getUser", () => {
-    socket.emit("userGet", users)
-  })
-  
-
-  socket.on("disconnect", () => {
-    sessionRepository.deleteSession(socket.userID);
-    socket.broadcast.emit("users", users);
-    console.log(`User disconnected ${socket.id}`);
+  socket.on("disconnect", async () => {
+    sessions.filter(sessions => sessions.userID != socket.userID)
+    console.log(`User disconnected ${socket.user} session: ${socket.sessionID}`);
   })
 });
 

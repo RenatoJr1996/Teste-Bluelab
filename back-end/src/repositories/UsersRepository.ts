@@ -3,9 +3,7 @@ import { IUsersRepository, ICreateUsersDTO } from "./IUserRepository";
 import { PrismaClient } from '@prisma/client'
 import { IResquestUpdate } from "../users/services/UpdateUser";
 
-export const prisma = new PrismaClient({
-    log: ['query']
-});
+export const prisma = new PrismaClient();
 
 export class UsersRepository implements IUsersRepository{
 
