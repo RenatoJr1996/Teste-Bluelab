@@ -1,12 +1,21 @@
 import Head from 'next/head'
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Chat } from '@/components/home/chat/Chat';
 import { Authenticate } from '@/components/home/Authenticate/authenticate';
 import { ChatContext } from '@/contexts/context';
+import { isAuthenticated } from '@/services/Auth';
+
 
   
 export default function Home() {
-const { chat } = useContext(ChatContext)
+const { chat, setChat } = useContext(ChatContext)
+
+  useEffect(() => {
+    if(isAuthenticated()){
+      setChat(true)
+    }
+  }, [])
+  
 
   return (
     <>

@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { Form } from "@/components/UseFul/Form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { UsersAvatar } from "./UsersAvatar";
 
 
@@ -20,6 +20,7 @@ export interface IUSer{
 	user: string
 }
 
+const socket = io("http://localhost:3333", { autoConnect: false });
 
 export function Chat() {
 	const {userID, nome} = useContext(ChatContext)
@@ -27,7 +28,7 @@ export function Chat() {
 	const [userConnected, setUsersConected] = useState<IUSer[]>([]);
 	const { register, handleSubmit } = useForm();
 
-	const socket = io("http://localhost:3333", { autoConnect: false });
+	
 
 // start connection and list the users
 	useEffect(() => {
@@ -40,19 +41,10 @@ export function Chat() {
 		socket.emit("getUser");
 
 		socket.on("userGet", (users) => {
-			setUsersConected(users);  
+			setUsersConected(users); 
 		  });
 
-		return () => {
-			socket.off("userGet");	
-		}
-		  
-	}, [])
-
-
-// update list of online users		
-	useEffect(() => {
-		socket.on("users", (users) =>{
+		  socket.on("users", (users) =>{
 			setUsersConected(users);
 		});
 		
@@ -61,11 +53,19 @@ export function Chat() {
 			localStorage.setItem("sessionID", sessionID)
 		})
 
+		socket.on("sendMessage", (message) => {
+			console.log("recive message:", message);
+			
+		})
+
 		return () => {
+			socket.off("userGet");
 			socket.off("user");	
 			socket.off("session");	
 		}
-	},[socket])
+		  
+	}, [])
+
 
 	const mySelf = (id: string) => {
         if (userID === id) {
@@ -77,16 +77,18 @@ export function Chat() {
 
 
 	const sendMessage =  (data: any) => {
-
 		const message = {
 			nome,
 			userID,
-			name: selectedUser,
+			to: selectedUser,
 			message: data.message,
 			time: new Date().getHours() + ":" + new Date().getMinutes()
 		}
 
-		socket.emit("sendMessage", message)	
+		if(selectedUser){
+			socket.emit("sendMessage", message)	
+			console.log(message);
+		}	
 	}
 
 

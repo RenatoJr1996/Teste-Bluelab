@@ -11,6 +11,7 @@ import { randomUUID } from 'crypto';
 import { SocketRepositoryInMemory } from './repositories/inMemory/SocketRepositoryInMemory'
 import { socketDeleteSessionController, socketFindSessionController, socketListAllSessionController, socketsaveSesionController } from './socket';
 import { Session } from './models/SocketModel';
+import { emit } from 'process';
 
 
 interface ISocketIO extends Socket{
@@ -97,14 +98,15 @@ io.on("connection", async (socket: ISocketIO) => {
   socket.join(socket.userID);
 
   
-  // socket.broadcast.emit("users",sessions);
+  socket.broadcast.emit("users",sessions);
   
-  // socket.on("getUser", () => {
-  //   socket.emit("userGet", sessions)
-  // })
+  socket.on("getUser", () => {
+    socket.emit("userGet", sessions)
+  })
 
-  socket.on("sendMessage", (data) => {
-    console.log(data);
+  socket.on("sendMessage", (message) => {
+    console.log(message);
+    socket.emit("sendMessage",message);
     
   })
 
