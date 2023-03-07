@@ -25,12 +25,14 @@ model Users {
   @@map("users")
 }
 
-// model Messages {
-//   id          String     @id  @default(uuid())
-// 	room        String
-// 	name        String
-// 	message     String
-// 	time        String
+model Messages {
+  id          String     @id  @default(uuid())
+	nome        String
+	userID      String
+	toUser      String
+	toUserID    String
+	message     String
+	time        String
 
-//   @@map("messages")
-// }
+  @@map("messages")
+}

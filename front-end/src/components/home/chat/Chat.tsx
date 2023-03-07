@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { ChatContext, IMessage } from "@/contexts/context";
-import { MessageArea } from "./MessageAre";
+import { ChatContext } from "@/contexts/context";
 import { io } from "socket.io-client";
 import { Form } from "@/components/UseFul/Form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from "react-hook-form";
 import { UsersAvatar } from "./UsersAvatar";
+import { MessageArea } from "./MessageAre";
 
 
 const ChatSchema = z.object({
@@ -15,7 +15,14 @@ const ChatSchema = z.object({
 
 type ChatData = z.infer<typeof ChatSchema>
 
-export interface IUSer{
+export interface IMessage {
+	to: IUser | undefined
+	userID: string;
+    nome: string,
+    message: string,
+    time: String
+  }
+export interface IUser{
 	userID: string
 	user: string
 }
@@ -24,13 +31,12 @@ const socket = io("http://localhost:3333", { autoConnect: false });
 
 export function Chat() {
 	const {userID, nome} = useContext(ChatContext)
-	const [selectedUser, setSeletectedUser] = useState<IUSer>();
-	const [userConnected, setUsersConected] = useState<IUSer[]>([]);
+	const [selectedUser, setSeletectedUser] = useState<IUser>();
+	const [userConnected, setUsersConected] = useState<IUser[]>([]);
+	const [messageList, setMessageList] = useState<IMessage[]>([]);
 	const { register, handleSubmit } = useForm();
+	console.log(messageList);
 
-	
-
-// start connection and list the users
 	useEffect(() => {
 		const sessionID = localStorage.getItem("sessionID");
 
@@ -42,6 +48,7 @@ export function Chat() {
 
 		socket.on("userGet", (users) => {
 			setUsersConected(users); 
+			
 		  });
 
 		  socket.on("users", (users) =>{
@@ -54,14 +61,25 @@ export function Chat() {
 		})
 
 		socket.on("sendMessage", (message) => {
-			console.log("recive message:", message);
+			setMessageList(list => [...list, message])
+		})
+
+		socket.on("getMessages", (messages) => {
+			messages.map((message: IMessage) => {
+				return(
+					setMessageList(list => [...list, message])
+					
+				)
+			})
 			
+		
 		})
 
 		return () => {
 			socket.off("userGet");
 			socket.off("user");	
-			socket.off("session");	
+			socket.off("session");
+			socket.off("sendMessage")	
 		}
 		  
 	}, [])
@@ -77,7 +95,7 @@ export function Chat() {
 
 
 	const sendMessage =  (data: any) => {
-		const message = {
+		const message : IMessage = {
 			nome,
 			userID,
 			to: selectedUser,
@@ -85,11 +103,14 @@ export function Chat() {
 			time: new Date().getHours() + ":" + new Date().getMinutes()
 		}
 
-		if(selectedUser){
-			socket.emit("sendMessage", message)	
-			console.log(message);
+		if(!selectedUser){
+			return alert("Por favor selecione alguem para conversar!")
 		}	
+		socket.emit("sendMessage", message);
+		setMessageList(list => [...list, message])
+
 	}
+
 
 
 
@@ -114,7 +135,7 @@ export function Chat() {
 					<div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
 						<h2 className="bg-green-600 text-center font-bold">{selectedUser?.user}</h2>
 
-						<MessageArea />
+						<MessageArea messageName={selectedUser?.user} messageList={messageList} />
 						
 						<div className="bg-gray-300 p-4">
 							<input

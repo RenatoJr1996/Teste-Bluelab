@@ -10,15 +10,8 @@ interface Icontext {
     setUserID: Dispatch<SetStateAction<string>>;
     setChat:  Dispatch<SetStateAction<boolean>>;
     room: string;
-    messageList: IMessage[];
   }
 
-  export interface IMessage {
-    room: string,
-    name: string,
-    message: string,
-    time: String
-  }
   
 interface IChatContextProvider {
   children: ReactNode;
@@ -30,7 +23,7 @@ export function ChatContextProvider({ children }: IChatContextProvider ) {
     const [nome, setName] = useState('');
     const [userID, setUserID] = useState('');
     const [chat, setChat] = useState(false);
-    const [messageList, setMessageList] = useState<IMessage[]>([]);
+
     
 
     // const socket = io("http://localhost:3333");
@@ -46,7 +39,6 @@ export function ChatContextProvider({ children }: IChatContextProvider ) {
         setUserID,
         setChat,
         setName,
-        messageList,
     }}>
 
       {children}

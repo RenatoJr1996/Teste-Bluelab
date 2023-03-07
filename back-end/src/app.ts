@@ -8,10 +8,10 @@ import cors from 'cors'
 import { Server, Socket } from 'socket.io'
 import { AppError } from './errors/AppError';
 import { randomUUID } from 'crypto';
-import { SocketRepositoryInMemory } from './repositories/inMemory/SocketRepositoryInMemory'
 import { socketDeleteSessionController, socketFindSessionController, socketListAllSessionController, socketsaveSesionController } from './socket';
-import { Session } from './models/SocketModel';
-import { emit } from 'process';
+import { Session } from './models/SocketModel';import { SocketMessageRepository } from './repositories/SocketMessagesRepository';
+import { createSocketMessageController, listSocketMessageController } from './messages';
+;
 
 
 interface ISocketIO extends Socket{
@@ -20,6 +20,7 @@ interface ISocketIO extends Socket{
   userID: string
 }
 
+const socketMessageRepository = new SocketMessageRepository();
 
 export const app = express()
 
@@ -49,17 +50,18 @@ export const io = new Server(server, {
     }
 });
 
-const sessions = [];
+
 
 io.use(async (socket: ISocketIO, next) => {
-  const sessionID = socket.handshake.auth.sessionID;
+  const userID = socket.handshake.auth.userID;
   
-  if (sessionID) {
-    const session = sessions.find(session => session.sessionID === sessionID )
+  if (userID) {
+    // const session = sessions.find(session => session.sessionID === sessionID )
+    const session = await socketFindSessionController.handle(userID)
     
     if (session) {
-      socket.sessionID = sessionID;
-      socket.userID = session.userID;
+      socket.sessionID = session.sessionID;
+      socket.userID = userID;
       socket.user = session.user
       return next();
     }
@@ -67,18 +69,18 @@ io.use(async (socket: ISocketIO, next) => {
 
   socket.sessionID = randomUUID();
   socket.user = socket.handshake.auth.nome;
-  socket.userID = socket.handshake.auth.userID;
+  socket.userID = userID;
   next();
 });
 
 
 
 io.on("connection", async (socket: ISocketIO) => {
-  console.log("Sessions data ",sessions);
   
   socket.user = socket.handshake.auth.nome;
   socket.userID = socket.handshake.auth.userID;
-  if(!sessions.find(session => session.userID === socket.userID )){
+
+  if(!await socketFindSessionController.handle(socket.userID)){
       const session = new Session();
 
       Object.assign(session, {
@@ -87,7 +89,7 @@ io.on("connection", async (socket: ISocketIO) => {
           userID: socket.userID
       })
       
-      sessions.push(session)
+      await socketsaveSesionController.handle(session)
   }
 
   socket.emit("session", {
@@ -97,21 +99,31 @@ io.on("connection", async (socket: ISocketIO) => {
 
   socket.join(socket.userID);
 
+  const sessions = await socketListAllSessionController.handle();
+  const messages = await listSocketMessageController.handle(socket.userID)
   
   socket.broadcast.emit("users",sessions);
   
   socket.on("getUser", () => {
+    socket.emit("getMessages", messages)
     socket.emit("userGet", sessions)
   })
 
   socket.on("sendMessage", (message) => {
-    console.log(message);
-    socket.emit("sendMessage",message);
+    createSocketMessageController.handle({
+      message: message.message, 
+      nome: message.nome, 
+      time: message.time, 
+      toUser: message.to.user, 
+      toUserID: message.to.userID, 
+      userID: message.userID
+    })
+    socket.to(message.to.userID).emit("sendMessage",message);
     
   })
 
   socket.on("disconnect", async () => {
-    sessions.filter(sessions => sessions.userID != socket.userID)
+    socketDeleteSessionController.handle(socket.userID);
     console.log(`User disconnected ${socket.user} session: ${socket.sessionID}`);
   })
 });

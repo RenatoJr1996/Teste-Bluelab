@@ -19,8 +19,8 @@ export class SocketRepositoryInMemory implements ISocketRepository {
         this.sessions.push(session)
     }
 
-    findSession(sessionID: string): Session {
-        return this.sessions.find(session => session.sessionID === sessionID )
+    findSession(UserID: string): Session {
+        return this.sessions.find(session => session.userID === UserID )
     }
 
     findAllSession(): Session[] {

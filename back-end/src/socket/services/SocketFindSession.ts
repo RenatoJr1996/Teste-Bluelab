@@ -7,10 +7,10 @@ import { SocketRepositoryInMemory } from "../../repositories/inMemory/SocketRepo
 export class SocketFindSession{
     constructor (private socketRepository: SocketRepositoryInMemory) {}
 
-    async execute(sessionID) {
+    async execute(userID: string) {
         
          
-    const session = this.socketRepository.findSession(sessionID);
+    const session = this.socketRepository.findSession(userID);
 
     return session
     }

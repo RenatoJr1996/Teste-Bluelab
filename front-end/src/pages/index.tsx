@@ -10,13 +10,6 @@ import { isAuthenticated } from '@/services/Auth';
 export default function Home() {
 const { chat, setChat } = useContext(ChatContext)
 
-  useEffect(() => {
-    if(isAuthenticated()){
-      setChat(true)
-    }
-  }, [])
-  
-
   return (
     <>
       <Head>
