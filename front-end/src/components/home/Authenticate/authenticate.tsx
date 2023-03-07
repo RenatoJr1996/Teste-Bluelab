@@ -1,4 +1,4 @@
-import { ChatContext } from "@/contexts/context";
+import { ChatContext, IMessage } from "@/contexts/context";
 import { useContext, useState } from "react";
 import { Header } from "../../UseFul/Header";
 import { Input } from "../../UseFul/Input";
@@ -46,6 +46,8 @@ export function Authenticate() {
           login(user.data.token);
 
           setChat(true);
+
+
 
     } catch (error) {
       

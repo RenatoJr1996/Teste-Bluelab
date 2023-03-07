@@ -3,12 +3,11 @@ import { useContext, useEffect } from 'react';
 import { Chat } from '@/components/home/chat/Chat';
 import { Authenticate } from '@/components/home/Authenticate/authenticate';
 import { ChatContext } from '@/contexts/context';
-import { isAuthenticated } from '@/services/Auth';
 
 
   
 export default function Home() {
-const { chat, setChat } = useContext(ChatContext)
+const { chat } = useContext(ChatContext)
 
   return (
     <>

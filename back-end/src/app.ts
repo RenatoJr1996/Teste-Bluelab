@@ -20,7 +20,6 @@ interface ISocketIO extends Socket{
   userID: string
 }
 
-const socketMessageRepository = new SocketMessageRepository();
 
 export const app = express()
 
@@ -56,7 +55,6 @@ io.use(async (socket: ISocketIO, next) => {
   const userID = socket.handshake.auth.userID;
   
   if (userID) {
-    // const session = sessions.find(session => session.sessionID === sessionID )
     const session = await socketFindSessionController.handle(userID)
     
     if (session) {
@@ -105,20 +103,27 @@ io.on("connection", async (socket: ISocketIO) => {
   socket.broadcast.emit("users",sessions);
   
   socket.on("getUser", () => {
-    socket.emit("getMessages", messages)
     socket.emit("userGet", sessions)
   })
 
+  socket.on("messagesGet", () => {
+    socket.emit("getMessages", messages);
+    console.log(messages);
+    
+  })
+
   socket.on("sendMessage", (message) => {
+    console.log(message);
+    
     createSocketMessageController.handle({
       message: message.message, 
       nome: message.nome, 
       time: message.time, 
-      toUser: message.to.user, 
-      toUserID: message.to.userID, 
+      toUser: message.toUser, 
+      toUserID: message.toUserID, 
       userID: message.userID
     })
-    socket.to(message.to.userID).emit("sendMessage",message);
+    socket.to(message.toUserID).emit("sendMessage",message);
     
   })
 
