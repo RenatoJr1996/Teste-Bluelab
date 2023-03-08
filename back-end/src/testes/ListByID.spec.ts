@@ -3,15 +3,16 @@ import { IUsersRepository } from "../repositories/IUserRepository";
 import { UsersRepositoryInMemory } from "../repositories/inMemory/UserRepositoryInMemory";
 import { AppError } from "../errors/AppError";
 import { ListUserBycpf } from "../users/services/ListUserBycpf";
+import { ListById } from "../users/services/ListById";
 
 
-describe("List By CPF", () => {
+describe("List By ID", () => {
     let userRepository: IUsersRepository
-    let listByCpf: ListUserBycpf
+    let listById: ListById
 
     beforeAll(() => {
         userRepository = new UsersRepositoryInMemory();
-        listByCpf = new ListUserBycpf(userRepository);
+        listById = new ListById(userRepository);
 
         const user = {
             email:"renatto.cjunior@gmail.com",
@@ -25,22 +26,4 @@ describe("List By CPF", () => {
         userRepository.create(user)
     })
 
-
-    it("Shouldn't be able to list a user by a invalid CPF", async  () =>{
-
-        await expect(listByCpf.execute({cpf:'123456789'})).rejects.toEqual(new AppError("CPF inválido."))
-    })
-
-
-    it("Shouldn't be able to list user by not cadastred CPF", async  () =>{
-
-        await expect(listByCpf.execute({cpf:'49413157820'})).rejects.toEqual(new AppError("CPF não encontrado"))
-    })
-    
-
-    it("Should be able to list a user", async () => {
-        const resp = await listByCpf.execute({cpf:'390.934.078-48'})
-        
-        expect(resp.sucess).toBe(true)
-    })
 })

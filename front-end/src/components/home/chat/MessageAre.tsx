@@ -1,7 +1,7 @@
 import { Form } from "@/components/UseFul/Form"
 import { ChatContext, IMessage } from "@/contexts/context"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import ScrollToBottom from "react-scroll-to-bottom"
 import { z } from "zod"
@@ -15,23 +15,25 @@ interface Props {
 }
 
 const ChatSchema = z.object({
-	message: z.string().min(1, {message: "digite uma mensagem"})
+	message: z.string()
+    // .min(1, {message: "digite uma mensagem"})
 })
 
 type ChatData = z.infer<typeof ChatSchema>
 
 
 export function MessageArea({ messageName, selectedUser }: Props) {
-    const {userID, nome, messageList, setMessageList, socket } = useContext(ChatContext)
-    const { register, handleSubmit, formState: { errors } } = useForm<ChatData>({ resolver: zodResolver(ChatSchema)})
+    const {userID, nome, messageList, setMessageList, socket } = useContext(ChatContext);
+    const { register, handleSubmit, formState: { errors } } = useForm<ChatData>({ resolver: zodResolver(ChatSchema)});
+    const [inputValue, setInputValue] = useState('');
 
-    const sendMessage =  (data: any) => {
+    const sendMessage =  () => {
 		const message : IMessage = {
 			nome,
 			userID,
 			toUserID: selectedUser?.userID,
 			toUser: selectedUser?.user,
-			message: data.message,
+			message: inputValue,
 			time: new Date().getHours() + ":" + new Date().getMinutes()
 		}
 
@@ -40,7 +42,7 @@ export function MessageArea({ messageName, selectedUser }: Props) {
 		}	
 		socket.emit("sendMessage", message);
 		setMessageList(list => [...list, message])
-
+        setInputValue('')
 	}
 
     useEffect(() => {
@@ -92,6 +94,9 @@ export function MessageArea({ messageName, selectedUser }: Props) {
                     className="flex items-center h-10 w-full rounded px-3 text-sm"
                     type="text"
                     placeholder="Type your message…"
+                    onChange={({target}) => {setInputValue(target.value)}}
+                    value = {inputValue}
+                    
                 />
                 <span className="text-red-400">{errors.message?.message}</span>
             </div>

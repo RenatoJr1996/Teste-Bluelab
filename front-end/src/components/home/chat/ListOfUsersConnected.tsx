@@ -11,6 +11,7 @@ interface Props {
 export function LisOfUserConnected({setSeletectedUser}: Props) {
     const {userID, socket} = useContext(ChatContext)
     const [userConnected, setUsersConected] = useState<IUser[]>([]);
+    const [newMessage, setNewMessage] = useState(false);
 
     useEffect(() => {
         socket.emit("getUser");
@@ -46,8 +47,8 @@ export function LisOfUserConnected({setSeletectedUser}: Props) {
             {
                 userConnected.map((user, index) => {
                     return (
-                        <div onClick={() => setSeletectedUser(user) } key={index}>
-                            {mySelf(user.userID) ? <UsersAvatar user={user.user} /> : <div></div>}
+                        <div onClick={() => {setSeletectedUser(user)}  } key={index}>
+                            {mySelf(user.userID) ? <UsersAvatar newMessage={false} user={user.user} /> : <div></div>}
                         </div>
                     )
                 })

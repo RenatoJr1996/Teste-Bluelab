@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createUserController, deleteUserController, listByCpfController, listAllController, updateUserController, authenticateUserContoller, } from './users';
+import { createUserController, deleteUserController, listByCpfController, listAllController, updateUserController, authenticateUserContoller, listByIdController, } from './users';
 import { AuthenticateAdminMiddleware } from './middleware/AuthenticateAdminMiddleware';
 export const routes = Router();
 
@@ -10,6 +10,10 @@ routes.post("/user", (request, response) => {
 
 routes.post('/auth',(request, response) => {
     return authenticateUserContoller.handle(request, response);
+});
+
+routes.get('/auth',(request, response) => {
+    return listByIdController.handle(request, response);
 });
 
 routes.delete("/user",AuthenticateAdminMiddleware ,(request, response) => {

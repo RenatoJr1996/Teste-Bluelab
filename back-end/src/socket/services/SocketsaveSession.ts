@@ -16,7 +16,6 @@ export class SocketsaveSession{
     const session = this.socketRepository.findSession(userID)
         
     if(!session) {
-        console.log(`session ${sessionID} created`);
         
         this.socketRepository.saveSession({sessionID, userID, user})
     }

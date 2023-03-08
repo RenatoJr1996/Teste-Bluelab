@@ -4,7 +4,7 @@ import { AppError } from "../errors/AppError";
 import { UpadateUser } from "../users/services/UpdateUser";
 
 
-describe("Delete User", () => {
+describe("Update User", () => {
     let userRepository: IUsersRepository
     let updateUser: UpadateUser
 

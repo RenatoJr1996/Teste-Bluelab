@@ -44,7 +44,7 @@ export function Chat() {
 			<div>
 				<div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-200 text-gray-800 p-10">
 					 
-					<LisOfUserConnected setSeletectedUser={setSeletectedUser} />
+					<LisOfUserConnected   setSeletectedUser={setSeletectedUser} />
 
 					<div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
 						<h2 className="bg-green-600 text-center font-bold">{selectedUser?.user}</h2>
