@@ -1,16 +1,17 @@
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 
 interface Props {
     user: string
     newMessage: boolean
+    setNewMessage: Dispatch<SetStateAction<boolean>>
 }
 
 
-export function UsersAvatar({ user, newMessage }:Props) {
+export function UsersAvatar({ user, newMessage, setNewMessage }:Props) {
 
 
     return(
-        <div className="flex flex-col pb-4 px-2 " >
+        <div onClick={() => setNewMessage(false)} className="flex flex-col pb-4 px-2 " >
         <div className="">
         { newMessage 
         ?

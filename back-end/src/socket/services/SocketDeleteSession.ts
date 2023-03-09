@@ -1,15 +1,15 @@
-import { SocketRepositoryInMemory } from "../../repositories/inMemory/SocketRepositoryInMemory";
+import { SocketRepository } from "../../repositories/SocketRepository";
 
 
 
 
 export class SocketDeleteSession{
-    constructor(private socketRepository: SocketRepositoryInMemory) {}
+    constructor(private socketRepository: SocketRepository) {}
 
 
-    async execute(sessionID){
+    async execute(sessionID: string){
         
+        await this.socketRepository.deleteSession(sessionID);
 
-        this.socketRepository.deleteSession(sessionID);
     } 
 }

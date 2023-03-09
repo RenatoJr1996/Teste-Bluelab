@@ -5,7 +5,6 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerFile from './swagger.json'
 import http from 'http'
 import cors from 'cors'
-import { Server} from 'socket.io'
 import { AppError } from './errors/AppError';
 
 

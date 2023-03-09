@@ -7,8 +7,8 @@ import { SocketDeleteSession } from "../services/SocketDeleteSession";
 export class SocketDeleteSessionController{
     constructor(private socketDeleteSession: SocketDeleteSession) {}
 
-    async handle(sessionID){
+    async handle(sessionID: string){
 
-    this.socketDeleteSession.execute(sessionID);
+    await this.socketDeleteSession.execute(sessionID);
     }
 }

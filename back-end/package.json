@@ -37,6 +37,7 @@
     "node-cpf": "^1.2.4",
     "react-hook-form": "^7.43.2",
     "socket.io": "^4.6.0",
+    "socket.io-client": "^4.6.1",
     "swagger-ui-express": "^4.6.0",
     "telefone": "^1.2.4",
     "ts-node": "^10.9.1",

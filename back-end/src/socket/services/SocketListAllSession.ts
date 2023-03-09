@@ -1,15 +1,15 @@
-import { SocketRepositoryInMemory } from "../../repositories/inMemory/SocketRepositoryInMemory";
+import { SocketRepository } from "../../repositories/SocketRepository";
 
 
 
 
 export class SocketListAllSession{
-    constructor (private socketRepository: SocketRepositoryInMemory) {}
+    constructor (private socketRepository: SocketRepository) {}
 
     async execute() {
          
-    const sessions =  this.socketRepository.findAllSession()
-
+    const sessions = await this.socketRepository.findAllSession()
+    
     return sessions
     }
 } 

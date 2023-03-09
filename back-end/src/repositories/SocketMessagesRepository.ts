@@ -1,4 +1,4 @@
-import { Message, Session } from "../models/SocketModel";
+import { Message } from "../models/SocketModel";
 import { ICreateMessageDTO, ISocketMessageRepository } from "./ISocketMessagesRepository";
 import { prisma } from "./UsersRepository";
 
@@ -20,7 +20,6 @@ export class SocketMessageRepository implements ISocketMessageRepository {
                 userID
             }
         })
-        
     }
 
     async listMessage(userID: string): Promise<Message[]> {

@@ -1,23 +1,17 @@
-import { SocketRepositoryInMemory } from "../../repositories/inMemory/SocketRepositoryInMemory"
+import { SocketRepository } from "../../repositories/SocketRepository";
 
 
 interface ISession{
-    sessionID: string;
     userID: string;
     user: string;
 }
 
 
 export class SocketsaveSession{
-    constructor (private socketRepository: SocketRepositoryInMemory) {}
+    constructor (private socketRepository: SocketRepository) {}
 
-    async execute({sessionID, userID, user}:ISession)  {
-         
-    const session = this.socketRepository.findSession(userID)
-        
-    if(!session) {
-        
-        this.socketRepository.saveSession({sessionID, userID, user})
-    }
+    async execute({userID, user}:ISession)  {
+
+        await this.socketRepository.saveSession({userID, user})
     }
 }

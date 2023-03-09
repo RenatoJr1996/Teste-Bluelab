@@ -36,3 +36,12 @@ model Messages {
 
   @@map("messages")
 }
+
+model Sessions {
+  sessionID   String     @id  @default(uuid())
+  user        String
+	userID      String
+  created_at  DateTime
+
+  @@map("sessions")
+}

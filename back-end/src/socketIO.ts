@@ -49,15 +49,8 @@ io.on("connection", async (socket: ISocketIO) => {
     socket.userID = socket.handshake.auth.userID;
   
     if(!await socketFindSessionController.handle(socket.userID)){
-        const session = new Session();
-  
-        Object.assign(session, {
-            user: socket.user,
-            sessionID: randomUUID(),
-            userID: socket.userID
-        })
-        
-        await socketsaveSesionController.handle(session)
+      
+        await socketsaveSesionController.handle({user: socket.user, userID: socket.userID})
     }
   
     socket.emit("session", {
@@ -68,6 +61,7 @@ io.on("connection", async (socket: ISocketIO) => {
     socket.join(socket.userID);
   
     const sessions = await socketListAllSessionController.handle();
+    
     const messages = await listSocketMessageController.handle(socket.userID)
     
     socket.broadcast.emit("users",sessions);
@@ -96,7 +90,6 @@ io.on("connection", async (socket: ISocketIO) => {
     })
   
     socket.on("disconnect", async () => {
-      socketDeleteSessionController.handle(socket.userID);
       console.log(`User disconnected ${socket.user} session: ${socket.sessionID}`);
     })
   });

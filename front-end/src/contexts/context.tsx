@@ -21,7 +21,7 @@ export interface IMessage {
   nome: string;
   message: string
   time: String;
-    }
+  }
 interface IChatContextProvider {
   children: ReactNode;
 }
@@ -38,10 +38,6 @@ export function ChatContextProvider({ children }: IChatContextProvider ) {
     const [messageList, setMessageList] = useState<IMessage[]>([]);
     
 
-   
-
-
-
   return (
     <ChatContext.Provider value={{
         nome,
@@ -52,7 +48,7 @@ export function ChatContextProvider({ children }: IChatContextProvider ) {
         setName,
         socket,
         messageList,
-        setMessageList
+        setMessageList,
     }}>
 
       {children}

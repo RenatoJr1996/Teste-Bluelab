@@ -16,7 +16,6 @@ interface Props {
 
 const ChatSchema = z.object({
 	message: z.string()
-    // .min(1, {message: "digite uma mensagem"})
 })
 
 type ChatData = z.infer<typeof ChatSchema>
@@ -27,6 +26,23 @@ export function MessageArea({ messageName, selectedUser }: Props) {
     const { register, handleSubmit, formState: { errors } } = useForm<ChatData>({ resolver: zodResolver(ChatSchema)});
     const [inputValue, setInputValue] = useState('');
 
+
+    useEffect(() => {
+      socket.emit("messagesGet")
+
+      socket.on("getMessages", (messages) => {
+        messages.forEach((message: IMessage) => {
+            setMessageList(list => [...list, message])
+        });
+        
+      })
+    
+      return () => {
+        socket.off("messagesGet")
+        socket.off("getMessages")
+      }
+    }, [])
+
     const sendMessage =  () => {
 		const message : IMessage = {
 			nome,
@@ -36,7 +52,7 @@ export function MessageArea({ messageName, selectedUser }: Props) {
 			message: inputValue,
 			time: new Date().getHours() + ":" + new Date().getMinutes()
 		}
-
+        if(inputValue ===''){return}
 		if(!selectedUser){
 			return alert("Por favor selecione alguem para conversar!")
 		}	
@@ -45,20 +61,6 @@ export function MessageArea({ messageName, selectedUser }: Props) {
         setInputValue('')
 	}
 
-    useEffect(() => {
-      socket.emit("messagesGet")
-
-      socket.on("getMessages", (messages) => {
-        messages.map((message: IMessage) => {
-            setMessageList(list => [...list, message])
-        })
-      })
-    
-      return () => {
-        socket.off("messagesGet")
-        socket.off("getMessages")
-      }
-    }, [])
     
 
     return (

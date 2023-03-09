@@ -7,8 +7,6 @@ export const prisma = new PrismaClient();
 
 export class UsersRepository implements IUsersRepository{
 
-
-
     async create({ email, password, nome, sobrenome, telefone, cpf}: ICreateUsersDTO ):Promise<Users>{
         const user = await prisma.users.create({
             data :{

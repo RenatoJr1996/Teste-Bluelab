@@ -16,7 +16,7 @@ export function LisOfUserConnected({setSeletectedUser}: Props) {
     useEffect(() => {
         socket.emit("getUser");
 
-		socket.on("userGet", (users) => {
+		socket.on("userGet", (users) => {;
 			setUsersConected(users); 
 		  });
 
@@ -48,7 +48,7 @@ export function LisOfUserConnected({setSeletectedUser}: Props) {
                 userConnected.map((user, index) => {
                     return (
                         <div onClick={() => {setSeletectedUser(user)}  } key={index}>
-                            {mySelf(user.userID) ? <UsersAvatar newMessage={false} user={user.user} /> : <div></div>}
+                            {mySelf(user.userID) ? <UsersAvatar setNewMessage={setNewMessage} newMessage={newMessage} user={user.user} /> : <div></div>}
                         </div>
                     )
                 })
